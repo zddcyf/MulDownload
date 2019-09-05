@@ -99,7 +99,7 @@ public class DownloadManagerController {
         //将下载请求放入队列
         long downloadId = manager.enqueue(down);
         downloadBeans.add(new DownloadBean(fileName, downloadId, position));
-        Log.i("保存文件路径为", fileName +":::::保存文件id为::::"+downloadId);
+        Log.i("保存文件路径为", fileName + ":::::保存文件id为::::" + downloadId);
         SpUtil.getInstance().putValue(fileName, downloadId);
         return this;
     }
@@ -158,21 +158,22 @@ public class DownloadManagerController {
      * 将查询结果从子线程中发往主线程（handler方式），以防止ANR
      */
     private void updateProgress() {
-//        int position = -1;
+        int position = -1;
         for (int i = 0; i < downloadBeans.size(); i++) {
-//            if (downloadBeans.get(i).getProgress() == 1) {
-//                position = i;
-//            } else {
-//                position = -1;
-//            }
-            int[] bytesAndStatus = getBytesAndStatus(downloadBeans.get(i).getDownloadId());
+            if (downloadBeans.get(i).getProgress() == 1) {
+                position = i;
+            } else {
+                position = -1;
+
+                int[] bytesAndStatus = getBytesAndStatus(downloadBeans.get(i).getDownloadId());
 //        downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]));
-            downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], i));
+                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], i));
+            }
         }
 
-//        if (position != -1) {
-//            downloadBeans.remove(position);
-//        }
+        if (position != -1) {
+            downloadBeans.remove(position);
+        }
     }
 
     /**

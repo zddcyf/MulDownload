@@ -137,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
         DownloadManagerController.getInstance().registerDownload();
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        DownloadManagerController.getInstance().unRegisterDownload();
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DownloadManagerController.getInstance().unRegisterDownload();
+    }
 
     @Override
     protected void onDestroy() {
