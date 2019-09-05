@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void itemDownloadClick(final LanguageBean languageBean) {
-                Log.i(TAG, "itemDownloadClick::::::下载语言项");
+            public void itemDownloadClick(LanguageBean languageBean) {
+                Log.i(TAG, "itemDownloadClick::::::下载语言项"
+                        + ":::::下载的路径:::::" + HttpUrlConfig.DOWNLOAD_LANGUAGE_URL
+                        + languageBean.getFileName());
 //                DialogActivity.launch(MainActivity.this, false, languageBean);
                 DownloadManagerController.getInstance()
                         .download(HttpUrlConfig.DOWNLOAD_LANGUAGE_URL
@@ -135,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
         DownloadManagerController.getInstance().registerDownload();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        DownloadManagerController.getInstance().unRegisterDownload();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        DownloadManagerController.getInstance().unRegisterDownload();
+//    }
 
     @Override
     protected void onDestroy() {

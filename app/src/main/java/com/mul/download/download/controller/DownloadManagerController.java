@@ -99,6 +99,7 @@ public class DownloadManagerController {
         //将下载请求放入队列
         long downloadId = manager.enqueue(down);
         downloadBeans.add(new DownloadBean(fileName, downloadId, position));
+        Log.i("保存文件路径为", fileName +":::::保存文件id为::::"+downloadId);
         SpUtil.getInstance().putValue(fileName, downloadId);
         return this;
     }
@@ -120,10 +121,12 @@ public class DownloadManagerController {
                     DownloadBean downloadBean = downloadBeans.get(position);
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
+                        Log.i(TAG, "文件名字:::::" + downloadBean.getFileName()
+                                + ":::::position==:::::" + position);
                         SpUtil.getInstance().putValue(downloadBean.getFileName(), 0L);
-//                        downloadBean.setProgress(progress);
-//                        downloadBeans.set((int) msg.obj, downloadBean);
-                        downloadBeans.remove(position);
+                        downloadBean.setProgress(progress);
+                        downloadBeans.set((int) msg.obj, downloadBean);
+//                        downloadBeans.remove(position);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
                         downloadBean.setProgress(progress);
@@ -155,7 +158,7 @@ public class DownloadManagerController {
      * 将查询结果从子线程中发往主线程（handler方式），以防止ANR
      */
     private void updateProgress() {
-        int position = -1;
+//        int position = -1;
         for (int i = 0; i < downloadBeans.size(); i++) {
 //            if (downloadBeans.get(i).getProgress() == 1) {
 //                position = i;

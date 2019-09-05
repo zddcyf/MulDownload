@@ -72,8 +72,8 @@ public class DataUtils {
                             , false
                             , languageBeans.size() == 1 ? true : false));
                 } else {
-                    Log.i("加载本地的下载文件", SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) + "");
-                    if (SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) == 0L) {
+                    Log.i("加载本地的下载文件", file.getName() + ":::::状态码::::::" + SpUtil.getInstance().getValue(file.getName(), 0L) + "");
+                    if (SpUtil.getInstance().getValue(file.getName(), 0L) == 0L) {
                         languageBeans.add(new LanguageBean(3
                                 , LanguageNameUtils.getLanguageName(file.getName())
                                 , file.getName()
