@@ -40,9 +40,9 @@ public class DownloadManagerController {
 
     private DownloadManagerReceiver completeReceiver;
     private DownloadChangeObserver downloadObserver;
-    public OnProgressListener onProgressListener;
-    public static final int HANDLE_DOWNLOAD = 0x001;
-    List<DownloadBean> downloadBeans = new ArrayList<>();
+    private OnProgressListener onProgressListener;
+    private static final int HANDLE_DOWNLOAD = 0x001;
+    private volatile List<DownloadBean> downloadBeans = new ArrayList<>();
 
     private DownloadManagerController() {
 
@@ -117,7 +117,11 @@ public class DownloadManagerController {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
                     Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::" + (int) msg.obj);
-                    DownloadBean downloadBean = downloadBeans.get((int) msg.obj);
+                    int position = (int) msg.obj;
+                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
+                        --position;
+                    }
+                    DownloadBean downloadBean = downloadBeans.get(position);
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
                         downloadBeans.remove((int) msg.obj);
