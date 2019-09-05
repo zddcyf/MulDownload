@@ -21,8 +21,8 @@ public class LanguageNameUtils {
     private static Map<String, String> languageNameUtils = new HashMap();
 
     static {
-        languageNameUtils.put(FileConfig.DOWNLOADED, "已下载的语音");
-        languageNameUtils.put(FileConfig.NOT_DOWNLOAD, "未下载");
+//        languageNameUtils.put(FileConfig.DOWNLOADED, "已下载的语言");
+//        languageNameUtils.put(FileConfig.NOT_DOWNLOAD, "未下载的语言");
 
         languageNameUtils.put(FileConfig.CMN_HANS_CN, "中文-简体");
 //        languageNameUtils.put(FileConfig.CMN_HANT_TW, "中文-繁体");
@@ -37,7 +37,7 @@ public class LanguageNameUtils {
          * 动态添加
          */
         languageNameUtils.put(FileConfig.DE, "德语");
-        languageNameUtils.put(FileConfig.AR, "阿拉伯语");
+        languageNameUtils.put(FileConfig.FR, "法语");
     }
 
     public static String getLanguageName(String key) {

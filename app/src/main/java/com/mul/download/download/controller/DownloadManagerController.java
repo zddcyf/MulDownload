@@ -68,9 +68,6 @@ public class DownloadManagerController {
     }
 
     public void unRegisterDownload() {
-        for (DownloadBean downloadBean : downloadBeans) {
-            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
-        }
         unRegisterReceiver();
         unregisterContentObserver();
     }
@@ -100,36 +97,9 @@ public class DownloadManagerController {
         //设置下载后文件存放的位置
         down.setDestinationInExternalPublicDir(filePath, fileName);
         //将下载请求放入队列
-        downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position));
-        return this;
-    }
-
-    /**
-     * 开启下载
-     *
-     * @param downloadPath 下载路径
-     * @param filePath     文件存放路径
-     * @param fileName     文件名称
-     * @param position     第几个在下载
-     */
-    public DownloadManagerController breadPointDownload(String downloadPath, String filePath, String fileName, int position) {
-        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
-
-        registerContentObserver();
-
-        Log.i(TAG, downloadPath);
-        //创建下载请求
-        DownloadManager.Request down = new DownloadManager.Request(Uri.parse(downloadPath));
-        //设置允许使用的网络类型，这里是移动网络和wifi都可以
-        down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-        //后台下载
-        down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        //显示下载界面
-        down.setVisibleInDownloadsUi(true);
-        //设置下载后文件存放的位置
-        down.setDestinationInExternalPublicDir(filePath, fileName);
-        //将下载请求放入队列
-        downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position));
+        long downloadId = manager.enqueue(down);
+        downloadBeans.add(new DownloadBean(fileName, downloadId, position));
+        SpUtil.getInstance().putValue(fileName, downloadId);
         return this;
     }
 
@@ -145,19 +115,15 @@ public class DownloadManagerController {
             if (onProgressListener != null && HANDLE_DOWNLOAD == msg.what) {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
-                    Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::" + (int) msg.obj);
+                    Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::" + msg.obj);
                     int position = (int) msg.obj;
-                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
-                        --position;
-                    }
-                    if (position > downloadBeans.size()) {
-                        position = downloadBeans.size() - 1;
-                    }
                     DownloadBean downloadBean = downloadBeans.get(position);
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
-                        downloadBeans.remove((int) msg.obj);
-                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
+                        SpUtil.getInstance().putValue(downloadBean.getFileName(), 0L);
+//                        downloadBean.setProgress(progress);
+//                        downloadBeans.set((int) msg.obj, downloadBean);
+                        downloadBeans.remove(position);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
                         downloadBean.setProgress(progress);
@@ -189,11 +155,21 @@ public class DownloadManagerController {
      * 将查询结果从子线程中发往主线程（handler方式），以防止ANR
      */
     private void updateProgress() {
+        int position = -1;
         for (int i = 0; i < downloadBeans.size(); i++) {
+//            if (downloadBeans.get(i).getProgress() == 1) {
+//                position = i;
+//            } else {
+//                position = -1;
+//            }
             int[] bytesAndStatus = getBytesAndStatus(downloadBeans.get(i).getDownloadId());
 //        downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]));
             downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], i));
         }
+
+//        if (position != -1) {
+//            downloadBeans.remove(position);
+//        }
     }
 
     /**

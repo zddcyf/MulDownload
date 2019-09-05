@@ -15,6 +15,6 @@ package com.mul.download.util;
 public class FileUtils {
     public static String getFileSize(String data) {
         long fileSize = FileAccessor.getFileSize(data);
-        return String.format("%sm", ((int) fileSize/1024/1024));
+        return String.format("%s", ((int) fileSize/1024/1024));
     }
 }

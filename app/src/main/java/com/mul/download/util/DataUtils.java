@@ -1,6 +1,7 @@
 package com.mul.download.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.mul.download.bean.LanguageBean;
 import com.mul.download.config.FileConfig;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class DataUtils {
     private List<LanguageBean> languageBeans = new ArrayList<>();
     private Map<String, LanguageBean> downloadLanguageBeans = new HashMap();
+    private boolean updateData = true;
 
     private DataUtils() {
         initData();
@@ -47,19 +49,18 @@ public class DataUtils {
          * 德语
          */
         downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.DE), new LanguageBean(LanguageCodeConfig.DE
-                , LanguageNameUtils.getLanguageName(FileConfig.DE), FileConfig.DE, "", true, true, false));
-        downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.AR), new LanguageBean(LanguageCodeConfig.AR
-                , LanguageNameUtils.getLanguageName(FileConfig.AR), FileConfig.AR, "", true, true, false));
+                , LanguageNameUtils.getLanguageName(FileConfig.DE), FileConfig.DE, "102", true, true, false));
+        downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.FR), new LanguageBean(LanguageCodeConfig.FR
+                , LanguageNameUtils.getLanguageName(FileConfig.FR), FileConfig.FR, "102", true, true, false));
     }
 
     public void setData() {
         languageBeans.clear();
-        languageBeans.add(new LanguageBean(0, LanguageNameUtils.getLanguageName(FileConfig.DOWNLOADED), "", "", false, false, false));
+        languageBeans.add(new LanguageBean(0, FileConfig.DOWNLOADED, "", "", false, false, false));
         List<File> files = FileAccessor.getFiles(FileAccessor.TRANSLATE_MICROSOFT_PATH);
         for (File file : files) {
             if (!TextUtils.isEmpty(file.getName())) {
                 if (FileConfig.CMN_HANS_CN.equals(file.getName())
-                        || FileConfig.CMN_HANT_TW.equals(file.getName())
                         || FileConfig.JA_JP.equals(file.getName())
                         || FileConfig.KO_KR.equals(file.getName())
                         || FileConfig.ES_US.equals(file.getName())) {
@@ -71,6 +72,7 @@ public class DataUtils {
                             , false
                             , languageBeans.size() == 1 ? true : false));
                 } else {
+                    Log.i("加载本地的下载文件", SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) + "");
                     if (SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) == 0L) {
                         languageBeans.add(new LanguageBean(3
                                 , LanguageNameUtils.getLanguageName(file.getName())
@@ -88,7 +90,7 @@ public class DataUtils {
          * 未下载的数据
          */
         if (downloadLanguageBeans.size() > 0) {
-            languageBeans.add(new LanguageBean(0, LanguageNameUtils.getLanguageName(FileConfig.NOT_DOWNLOAD)
+            languageBeans.add(new LanguageBean(0, FileConfig.NOT_DOWNLOAD
                     , "", "", false, false, false));
             for (String key : downloadLanguageBeans.keySet()) {
                 LanguageBean languageBean = downloadLanguageBeans.get(key);

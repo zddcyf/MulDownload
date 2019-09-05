@@ -64,7 +64,7 @@ public class LanguageBean implements Parcelable {
     }
 
     public String getFileSize() {
-        return fileSize;
+        return String.format("%s%s", fileSize, "MB");
     }
 
     public void setFileSize(String fileSize) {

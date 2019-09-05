@@ -13,6 +13,7 @@ import com.mul.download.R;
 import com.mul.download.adapter.LanguageDownloadAdapter;
 import com.mul.download.bean.LanguageBean;
 import com.mul.download.config.EventConfig;
+import com.mul.download.config.HttpUrlConfig;
 import com.mul.download.download.bean.DownloadBean;
 import com.mul.download.download.click.OnProgressListener;
 import com.mul.download.download.controller.DownloadManagerController;
@@ -73,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "itemDownloadClick::::::下载语言项");
 //                DialogActivity.launch(MainActivity.this, false, languageBean);
                 DownloadManagerController.getInstance()
-                        .download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
+                        .download(HttpUrlConfig.DOWNLOAD_LANGUAGE_URL
+                                        + languageBean.getFileName()
                                 , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
                                 , languageBean.getFileName()
                                 , languageBean.getPosition())
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onProgress(DownloadBean downloadBean) {
                                 Log.i(TAG, "当前id为" + downloadBean.getDownloadId()
                                         + "::::下载进度为::::::" + downloadBean.getProgress()
-                                        + "::::第几条::::::" + downloadBean.getPosition());
+                                        + "::::第几条::::::" + downloadBean.getPosition()
+                                        + "::::语言项列表的长度::::::" + DataUtils.getInstance().getDatas().size());
                                 DataUtils.getInstance().getDatas().get(downloadBean.getPosition()).setProgress(downloadBean.getProgress() * 360);
                                 DataUtils.getInstance().getDatas().set(downloadBean.getPosition(), DataUtils.getInstance().getDatas().get(downloadBean.getPosition()));
                                 rvAdapter.setDatas(DataUtils.getInstance().getDatas());
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 表示事件处理函数的线程在主线程(UI)线程，因此在这里不能进行耗时操作。
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -13,8 +13,8 @@ package com.mul.download.config;
  * @Version: v1.0.0
  */
 public interface FileConfig {
-    String DOWNLOADED = "已下载的语音";
-    String NOT_DOWNLOAD = "未下载";
+    String DOWNLOADED = "已下载的语言";
+    String NOT_DOWNLOAD = "未下载的语言";
 
     String CMN_HANS_CN = "zh-Hans.en.103.pack";
     String CMN_HANT_TW = "zh-Hant.en.1.pack";
@@ -23,7 +23,12 @@ public interface FileConfig {
     String KO_KR = "ko.en.102.pack";
     String ES_US = "es.en.102.pack";
 
-
-    String DE = "德语";
-    String AR = "阿拉伯语";
+    /**
+     * 德语
+     */
+    String DE = "de.en.102.pack";
+    /**
+     * 法语
+     */
+    String FR = "fr.en.102.pack";
 }
