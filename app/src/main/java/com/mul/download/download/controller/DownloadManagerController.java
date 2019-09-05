@@ -121,6 +121,9 @@ public class DownloadManagerController {
                     if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
                         --position;
                     }
+                    if (position > downloadBeans.size()) {
+                        position = downloadBeans.size() - 1;
+                    }
                     DownloadBean downloadBean = downloadBeans.get(position);
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
