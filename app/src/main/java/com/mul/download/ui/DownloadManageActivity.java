@@ -26,8 +26,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class MainActivity extends AppCompatActivity {
-    public static String TAG = "com.iguan.text.ui.MainActivity";
+public class DownloadManageActivity extends AppCompatActivity {
+    public static String TAG = "com.iguan.text.ui.DownloadManageActivity";
 
     private ConstraintLayout title;
     private RecyclerView rv;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         }
         FileAccessor.initFileAccess();
         DataUtils.getInstance();
-        DownloadManagerController.getInstance().init(MainActivity.this);
+        DownloadManagerController.getInstance().init(DownloadManageActivity.this);
         initView();
         initRv();
         initClick();
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "itemDownloadClick::::::下载语言项"
                         + ":::::下载的路径:::::" + HttpUrlConfig.DOWNLOAD_LANGUAGE_URL
                         + languageBean.getFileName());
-//                DialogActivity.launch(MainActivity.this, false, languageBean);
+//                DialogActivity.launch(DownloadManageActivity.this, false, languageBean);
                 DownloadManagerController.getInstance()
                         .download(HttpUrlConfig.DOWNLOAD_LANGUAGE_URL
                                         + languageBean.getFileName()
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void itemLongClick(LanguageBean languageBean) {
                 Log.i(TAG, "itemLongClick::::::长按");
-                DialogActivity.launch(MainActivity.this, true, languageBean);
+                DialogActivity.launch(DownloadManageActivity.this, true, languageBean);
             }
         });
     }
