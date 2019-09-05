@@ -104,6 +104,35 @@ public class DownloadManagerController {
         return this;
     }
 
+    /**
+     * 开启下载
+     *
+     * @param downloadPath 下载路径
+     * @param filePath     文件存放路径
+     * @param fileName     文件名称
+     * @param position     第几个在下载
+     */
+    public DownloadManagerController breadPointDownload(String downloadPath, String filePath, String fileName, int position) {
+        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
+
+        registerContentObserver();
+
+        Log.i(TAG, downloadPath);
+        //创建下载请求
+        DownloadManager.Request down = new DownloadManager.Request(Uri.parse(downloadPath));
+        //设置允许使用的网络类型，这里是移动网络和wifi都可以
+        down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+        //后台下载
+        down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        //显示下载界面
+        down.setVisibleInDownloadsUi(true);
+        //设置下载后文件存放的位置
+        down.setDestinationInExternalPublicDir(filePath, fileName);
+        //将下载请求放入队列
+        downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position));
+        return this;
+    }
+
     public void remoe(long... id) {
         manager.remove(id);
     }
