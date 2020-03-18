@@ -1,4 +1,4 @@
-package com.mul.download.download.weight;
+package com.mul.download.weight;
 
 import android.content.Context;
 import android.graphics.Canvas;

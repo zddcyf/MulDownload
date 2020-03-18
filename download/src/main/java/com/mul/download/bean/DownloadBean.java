@@ -1,4 +1,4 @@
-package com.mul.download.download.bean;
+package com.mul.download.bean;
 
 /**
  * @ProjectName: TO_Text

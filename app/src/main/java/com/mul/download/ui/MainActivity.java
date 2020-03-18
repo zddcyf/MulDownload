@@ -1,29 +1,37 @@
 package com.mul.download.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mul.download.R;
 import com.mul.download.adapter.LanguageDownloadAdapter;
+import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.LanguageBean;
+import com.mul.download.click.OnProgressListener;
 import com.mul.download.config.EventConfig;
-import com.mul.download.download.bean.DownloadBean;
-import com.mul.download.download.click.OnProgressListener;
-import com.mul.download.download.controller.DownloadManagerController;
+import com.mul.download.controller.DownloadManagerController;
 import com.mul.download.event.EventBusMessage;
 import com.mul.download.util.DataUtils;
 import com.mul.download.util.FileAccessor;
-import com.mul.download.util.SpUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static String TAG = "com.iguan.text.ui.MainActivity";
@@ -31,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout title;
     private RecyclerView rv;
     private LanguageDownloadAdapter rvAdapter;
+    private LanguageBean languageBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,29 +80,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void itemDownloadClick(final LanguageBean languageBean) {
                 Log.i(TAG, "itemDownloadClick::::::下载语言项");
+                MainActivity.this.languageBean = languageBean;
 //                DialogActivity.launch(MainActivity.this, false, languageBean);
-                DownloadManagerController.getInstance()
-                        .download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
-                                , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
-                                , languageBean.getFileName()
-                                , languageBean.getPosition())
-                        .setOnProgressListener(new OnProgressListener() {
-                            @Override
-                            public void onProgress(DownloadBean downloadBean) {
-                                Log.i(TAG, "当前id为" + downloadBean.getDownloadId()
-                                        + "::::下载进度为::::::" + downloadBean.getProgress()
-                                        + "::::第几条::::::" + downloadBean.getPosition());
-                                DataUtils.getInstance().getDatas().get(downloadBean.getPosition()).setProgress(downloadBean.getProgress() * 360);
-                                DataUtils.getInstance().getDatas().set(downloadBean.getPosition(), DataUtils.getInstance().getDatas().get(downloadBean.getPosition()));
-                                rvAdapter.setDatas(DataUtils.getInstance().getDatas());
-                            }
+                requestPermission(1, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                            @Override
-                            public void onSuccess(DownloadBean downloadBean) {
-                                DataUtils.getInstance().setData();
-                                rvAdapter.setDatas(DataUtils.getInstance().getDatas());
-                            }
-                        });
             }
 
             @Override
@@ -143,5 +133,113 @@ public class MainActivity extends AppCompatActivity {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    private int mRequestCode;
+
+    /**
+     * 请求权限
+     *
+     * @param permissions 需要的权限列表
+     * @param requestCode 请求码
+     */
+    protected void requestPermission(int requestCode, String... permissions) {
+        mRequestCode = requestCode;
+        if (checkPermissions(permissions)) {
+            permissionSuccess(requestCode);
+        } else {
+            List<String> needPermissions = checkSelfPermissions(permissions);
+            ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]), requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //系统请求权限回调
+        if (requestCode == mRequestCode) {
+            if (verifyPermissions(grantResults)) {
+                permissionSuccess(mRequestCode);
+            } else {
+                permissionFail(mRequestCode);
+            }
+        }
+    }
+
+    private boolean verifyPermissions(int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected void permissionSuccess(int requestCode) {
+
+        DownloadManagerController.getInstance()
+                .download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
+                        , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
+                        , languageBean.getFileName()
+                        , languageBean.getPosition())
+                .setOnProgressListener(new OnProgressListener() {
+                    @Override
+                    public void onProgress(DownloadBean downloadBean) {
+                        Log.i(TAG, "当前id为" + downloadBean.getDownloadId()
+                                + "::::下载进度为::::::" + downloadBean.getProgress()
+                                + "::::第几条::::::" + downloadBean.getPosition());
+                        DataUtils.getInstance().getDatas().get(downloadBean.getPosition()).setProgress(downloadBean.getProgress() * 360);
+                        DataUtils.getInstance().getDatas().set(downloadBean.getPosition(), DataUtils.getInstance().getDatas().get(downloadBean.getPosition()));
+                        rvAdapter.setDatas(DataUtils.getInstance().getDatas());
+                    }
+
+                    @Override
+                    public void onSuccess(DownloadBean downloadBean) {
+                        DataUtils.getInstance().setData();
+                        rvAdapter.setDatas(DataUtils.getInstance().getDatas());
+                    }
+                });
+    }
+
+    protected void permissionFail(int mRequestCode) {
+
+    }
+
+    /**
+     * 检查权限
+     *
+     * @param permissions
+     * @return
+     */
+    private List<String> checkSelfPermissions(String[] permissions) {
+        List<String> needRequestPermissionList = new ArrayList<>();
+        for (String permission : permissions) {
+            // 检查权限,如果没有授权就添加
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                needRequestPermissionList.add(permission);
+            }
+        }
+        return needRequestPermissionList;
+
+    }
+
+    /**
+     * 检查所需的权限是否都已授权
+     *
+     * @param permissions
+     * @return
+     */
+    private boolean checkPermissions(String[] permissions) {
+        // 手机版本 SDK 低于23 ，在Manifest 上注册有效，大于 23 的（android6.0以后的），读取手机的隐私需要在代码动态申请
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
     }
 }

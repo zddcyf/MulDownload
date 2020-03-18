@@ -1,6 +1,6 @@
-package com.mul.download.download.click;
+package com.mul.download.click;
 
-import com.mul.download.download.bean.DownloadBean;
+import com.mul.download.bean.DownloadBean;
 
 /**
  * @ProjectName: TO_Text

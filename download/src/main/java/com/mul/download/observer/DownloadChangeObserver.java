@@ -1,4 +1,4 @@
-package com.mul.download.download.observer;
+package com.mul.download.observer;
 
 import android.database.ContentObserver;
 import android.os.Handler;

@@ -1,4 +1,4 @@
-package com.mul.download.download.receiver;
+package com.mul.download.receiver;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

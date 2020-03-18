@@ -1,33 +1,30 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.config.compileSdkVersion
     buildToolsVersion rootProject.ext.config.buildToolsVersion
     defaultConfig {
-        applicationId "com.mul.download"
         minSdkVersion rootProject.ext.config.minSdkVersion
         targetSdkVersion rootProject.ext.config.targetSdkVersion
         versionCode rootProject.ext.config.versionCode
         versionName rootProject.ext.config.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation rootProject.ext.dependencies["appcompat"]
-    implementation rootProject.ext.dependencies["constraintlayout"]
     testImplementation rootProject.ext.dependencies["junit"]
     androidTestImplementation rootProject.ext.dependencies["runner"]
     androidTestImplementation rootProject.ext.dependencies["espressoCore"]
-    implementation rootProject.ext.dependencies["recyclerview"]
-    implementation rootProject.ext.dependencies["eventbus"]
-
-    implementation project(":download")
 }

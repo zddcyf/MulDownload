@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mul.download.R;
 import com.mul.download.bean.LanguageBean;
 import com.mul.download.config.FileConfig;
-import com.mul.download.download.weight.ProgressView;
+import com.mul.download.weight.ProgressView;
 
 import java.util.List;
 

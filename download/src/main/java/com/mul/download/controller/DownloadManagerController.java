@@ -1,4 +1,4 @@
-package com.mul.download.download.controller;
+package com.mul.download.controller;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -10,11 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.mul.download.download.bean.DownloadBean;
-import com.mul.download.download.click.OnProgressListener;
-import com.mul.download.download.observer.DownloadChangeObserver;
-import com.mul.download.download.receiver.DownloadManagerReceiver;
-import com.mul.download.util.SpUtil;
+import com.mul.download.bean.DownloadBean;
+import com.mul.download.click.OnProgressListener;
+import com.mul.download.observer.DownloadChangeObserver;
+import com.mul.download.receiver.DownloadManagerReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
  * @ProjectName: TO_Text
- * @Package: com.iguan.text.util.manager
+ * @Package: com.mul.download.controller
  * @ClassName: DownloadManagerController
  * @Author: zdd
  * @CreateDate: 2019/9/3 10:56
@@ -69,7 +68,7 @@ public class DownloadManagerController {
 
     public void unRegisterDownload() {
         for (DownloadBean downloadBean : downloadBeans) {
-            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
+//            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
         }
         unRegisterReceiver();
         unregisterContentObserver();
@@ -128,7 +127,7 @@ public class DownloadManagerController {
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
                         downloadBeans.remove((int) msg.obj);
-                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
+//                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
                         downloadBean.setProgress(progress);
