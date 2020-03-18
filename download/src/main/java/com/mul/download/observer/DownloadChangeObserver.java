@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.observer
  * @ClassName: DownloadChangeObserver
  * @Author: zdd

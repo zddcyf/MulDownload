@@ -1,7 +1,7 @@
 package com.mul.download.bean;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.bean
  * @ClassName: DownloadBean
  * @Author: zdd

@@ -3,7 +3,7 @@ package com.mul.download.click;
 import com.mul.download.bean.DownloadBean;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.click
  * @ClassName: OnProgressListener
  * @Author: zdd

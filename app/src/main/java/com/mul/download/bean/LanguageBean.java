@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.bean
  * @ClassName: LanguageBean
  * @Author: zdd
  * @CreateDate: 2019/9/2 9:44

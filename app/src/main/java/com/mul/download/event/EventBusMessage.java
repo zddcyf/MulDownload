@@ -1,8 +1,8 @@
 package com.mul.download.event;
 
 /**
- * @ProjectName: IGuan
- * @Package: com.iguan.base.library.eventbus
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.event
  * @ClassName: EventBusMessage
  * @Author: zdd
  * @CreateDate: 2019/8/15 16:18

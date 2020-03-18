@@ -17,8 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.util
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: ScreenUtils
  * @Author: zdd
  * @CreateDate: 2019/9/4 9:31

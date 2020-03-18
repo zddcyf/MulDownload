@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.receiver
  * @ClassName: DownloadManagerReceiver
  * @Author: zdd

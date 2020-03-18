@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import com.mul.download.util.ScreenUtils;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.weight
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: ProgressView
  * @Author: zdd
  * @CreateDate: 2019/9/4 9:29

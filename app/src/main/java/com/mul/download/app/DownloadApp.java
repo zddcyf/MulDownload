@@ -3,8 +3,8 @@ package com.mul.download.app;
 import android.app.Application;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.app
  * @ClassName: DownloadApp
  * @Author: zdd
  * @CreateDate: 2019/9/2 12:30

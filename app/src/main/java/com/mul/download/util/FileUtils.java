@@ -1,8 +1,8 @@
 package com.mul.download.util;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.util
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: FileUtils
  * @Author: zdd
  * @CreateDate: 2019/9/2 15:48

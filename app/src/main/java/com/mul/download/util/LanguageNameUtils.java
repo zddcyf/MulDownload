@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.util
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: LanguageNameUtils
  * @Author: zdd
  * @CreateDate: 2019/9/4 16:19

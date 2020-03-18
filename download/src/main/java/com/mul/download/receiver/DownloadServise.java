@@ -21,7 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.receiver
  * @ClassName: DownloadServise
  * @Author: zdd

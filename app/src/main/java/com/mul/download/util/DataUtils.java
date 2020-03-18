@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: DataUtils
  * @Author: zdd
  * @CreateDate: 2019/9/2 9:32

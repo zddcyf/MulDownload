@@ -22,7 +22,7 @@ import com.mul.download.util.LanguageNameUtils;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * @ProjectName: TO_Text
+ * @ProjectName: MulDownload
  * @Package: com.iguan.text.ui
  * @ClassName: DialogActivity
  * @Author: zdd

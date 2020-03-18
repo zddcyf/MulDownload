@@ -1,8 +1,8 @@
 package com.mul.download.config;
 
 /**
- * @ProjectName: IGuan
- * @Package: com.iguan.base.constant
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.config
  * @ClassName: EventConfig
  * @Author: zdd
  * @CreateDate: 2019/8/16 9:45

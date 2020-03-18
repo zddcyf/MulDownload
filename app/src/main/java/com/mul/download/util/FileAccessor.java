@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.util
  * @ClassName: FileAccessor
  * @Author: zdd
  * @CreateDate: 2019/9/2 9:33

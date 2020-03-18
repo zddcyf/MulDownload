@@ -1,8 +1,8 @@
 package com.mul.download.config;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.config
  * @ClassName: FileConfig
  * @Author: zdd
  * @CreateDate: 2019/9/2 13:42

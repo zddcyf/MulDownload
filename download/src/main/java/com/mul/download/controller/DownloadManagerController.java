@@ -2,7 +2,6 @@ package com.mul.download.controller;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,13 +18,10 @@ import com.mul.download.observer.DownloadChangeObserver;
 import com.mul.download.proxy.DownloadProxy;
 import com.mul.download.receiver.DownloadManagerReceiver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
- * @ProjectName: download
+ * @ProjectName: MulDownload
  * @Package: com.mul.download.controller
  * @ClassName: DownloadManagerController
  * @Author: zdd

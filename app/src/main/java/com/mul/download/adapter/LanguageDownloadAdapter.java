@@ -18,8 +18,8 @@ import com.mul.download.weight.ProgressView;
 import java.util.List;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text
+ * @ProjectName: MulDownload
+ * @Package: com.mul.download.adapter
  * @ClassName: LanguageDownloadAdapter
  * @Author: zdd
  * @CreateDate: 2019/9/2 12:46
