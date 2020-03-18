@@ -18,11 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mul.download.R;
 import com.mul.download.adapter.LanguageDownloadAdapter;
 import com.mul.download.bean.DownloadBean;
+import com.mul.download.bean.DownloadConfigBean;
 import com.mul.download.bean.LanguageBean;
 import com.mul.download.click.OnProgressListener;
 import com.mul.download.config.EventConfig;
-import com.mul.download.controller.DownloadManagerController;
 import com.mul.download.event.EventBusMessage;
+import com.mul.download.proxy.DownloadProxy;
 import com.mul.download.util.DataUtils;
 import com.mul.download.util.FileAccessor;
 
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         }
         FileAccessor.initFileAccess();
         DataUtils.getInstance();
-        DownloadManagerController.getInstance().init(MainActivity.this);
+//        DownloadManagerController.getInstance().init(MainActivity.this);
+        DownloadProxy.obtain().init(new DownloadConfigBean().setContext(this));
         initView();
         initRv();
         initClick();
@@ -118,13 +120,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        DownloadManagerController.getInstance().registerDownload();
+        DownloadProxy.obtain().registerDownload();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        DownloadManagerController.getInstance().unRegisterDownload();
+        DownloadProxy.obtain().unRegisterDownload();
     }
 
     @Override
@@ -176,12 +178,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void permissionSuccess(int requestCode) {
-
-        DownloadManagerController.getInstance()
-                .download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
-                        , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
-                        , languageBean.getFileName()
-                        , languageBean.getPosition())
+        DownloadProxy.obtain().download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
+                , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
+                , languageBean.getFileName()
+                , languageBean.getPosition())
                 .setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(DownloadBean downloadBean) {

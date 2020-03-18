@@ -8,12 +8,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mul.download.base.BaseDownloadController;
 import com.mul.download.bean.DownloadBean;
 import com.mul.download.click.OnProgressListener;
 import com.mul.download.observer.DownloadChangeObserver;
+import com.mul.download.proxy.DownloadProxy;
 import com.mul.download.receiver.DownloadManagerReceiver;
 
 import java.util.ArrayList;
@@ -33,55 +36,58 @@ import static android.content.Context.DOWNLOAD_SERVICE;
  * @UpdateRemark: 更新说明
  * @Version: v1.0.0
  */
-public class DownloadManagerController {
-    private static String TAG = "com.iguan.text.download.controller.DownloadManagerController";
-    private Context mContext;
+public class DownloadManagerController extends BaseDownloadController {
+    private static String TAG = "com.mul.download.controller.DownloadManagerController";
     private DownloadManager manager;
 
     private DownloadManagerReceiver completeReceiver;
     private DownloadChangeObserver downloadObserver;
     private OnProgressListener onProgressListener;
     private static final int HANDLE_DOWNLOAD = 0x001;
-    private volatile List<DownloadBean> downloadBeans = new ArrayList<>();
-    private boolean isReset; // 是否需要重新下载。不可以重新下载则会提示下载信息
-    private String submit; // 不可重新下载的提示信息
 
-    private DownloadManagerController() {
-
+    @Override
+    public void init() {
+        manager = (DownloadManager) DownloadProxy.obtain().getConfigBean().getContext().getSystemService(DOWNLOAD_SERVICE);
     }
 
-    public static DownloadManagerController getInstance() {
-        return DownloadManagerUtilsSington.DOWNLOAD_MANAGER_UTILS;
-    }
-
-    private static class DownloadManagerUtilsSington {
-        private static final DownloadManagerController DOWNLOAD_MANAGER_UTILS = new DownloadManagerController();
-    }
-
-    public DownloadManagerController init(Context mContext) {
-        return init(mContext, false, "正在下载中");
-    }
-
-    public DownloadManagerController init(Context mContext, boolean isReset, String submit) {
-        this.mContext = mContext;
-        this.isReset = isReset;
-        this.submit = submit;
-        manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
-        return this;
-    }
-
+    @Override
     public void registerDownload() {
         registerReceiver();
         registerContentObserver();
     }
 
+    @Override
     public void unRegisterDownload() {
         for (DownloadBean downloadBean : downloadBeans) {
             remoe(downloadBean.getDownloadId());
 //            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
         }
+        downloadBeans.clear();
         unRegisterReceiver();
         unregisterContentObserver();
+    }
+
+    /**
+     * 开启下载(单个文件下载)
+     *
+     * @param downloadPath 下载路径
+     * @param fileName     文件名称
+     */
+    @Override
+    public void download(String downloadPath, String fileName) {
+        download(downloadPath, DownloadProxy.obtain().getConfigBean().getFilePath(), fileName, 0);
+    }
+
+    /**
+     * 开启下载(存在列表下载时)
+     *
+     * @param downloadPath 下载路径
+     * @param fileName     文件名称
+     * @param position     第几个在下载
+     */
+    @Override
+    public void download(String downloadPath, String fileName, int position) {
+        download(downloadPath, DownloadProxy.obtain().getConfigBean().getFilePath(), fileName, position);
     }
 
     /**
@@ -91,8 +97,9 @@ public class DownloadManagerController {
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      */
-    public DownloadManagerController download(String downloadPath, String filePath, String fileName) {
-        return download(downloadPath, filePath, fileName, 0);
+    @Override
+    public void download(String downloadPath, String filePath, String fileName) {
+        download(downloadPath, filePath, fileName, 0);
     }
 
     /**
@@ -103,16 +110,23 @@ public class DownloadManagerController {
      * @param fileName     文件名称
      * @param position     第几个在下载
      */
-    public DownloadManagerController download(String downloadPath, String filePath, String fileName, int position) {
+    @Override
+    public void download(String downloadPath, String filePath, String fileName, int position) {
+        if (TextUtils.isEmpty(filePath)) {
+            Log.d(TAG, "pleas inti filepath");
+            return;
+        }
+
         int index = -1;
         for (DownloadBean downloadBean : downloadBeans) {
             if (downloadBean.getFileName().equals(fileName)) {
-                if (isReset) {
+                if (DownloadProxy.obtain().getConfigBean().isReset()) {
                     index = downloadBeans.indexOf(downloadBean);
                     remoe(downloadBean.getDownloadId());
                 } else {
-                    Toast.makeText(mContext, submit, Toast.LENGTH_SHORT).show();
-                    return this;
+                    Toast.makeText(DownloadProxy.obtain().getConfigBean().getContext()
+                            , DownloadProxy.obtain().getConfigBean().getSubmit(), Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         }
@@ -130,16 +144,22 @@ public class DownloadManagerController {
         //设置允许使用的网络类型，这里是移动网络和wifi都可以
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         //后台下载
-        down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        down.setNotificationVisibility(DownloadProxy.obtain().getConfigBean().isNotificationVisibility()
+                ? DownloadManager.Request.VISIBILITY_VISIBLE : DownloadManager.Request.VISIBILITY_HIDDEN);
         //显示下载界面
-        down.setVisibleInDownloadsUi(true);
+        down.setVisibleInDownloadsUi(DownloadProxy.obtain().getConfigBean().isVisibleInDownloadsUi());
         //设置下载后文件存放的位置
         down.setDestinationInExternalPublicDir(filePath, fileName);
         //将下载请求放入队列
         downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position));
-        return this;
     }
 
+    /**
+     * 删除正在下载
+     *
+     * @param id
+     */
+    @Override
     public void remoe(long... id) {
         manager.remove(id);
     }
@@ -184,6 +204,7 @@ public class DownloadManagerController {
      *
      * @param onProgressListener
      */
+    @Override
     public void setOnProgressListener(OnProgressListener onProgressListener) {
         this.onProgressListener = onProgressListener;
     }
@@ -243,7 +264,7 @@ public class DownloadManagerController {
     private void registerReceiver() {
         completeReceiver = new DownloadManagerReceiver();
         /** register download success broadcast **/
-        mContext.registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        DownloadProxy.obtain().getConfigBean().getContext().registerReceiver(completeReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     /**
@@ -251,7 +272,7 @@ public class DownloadManagerController {
      */
     private void unRegisterReceiver() {
         if (null != completeReceiver) {
-            mContext.unregisterReceiver(completeReceiver);
+            DownloadProxy.obtain().getConfigBean().getContext().unregisterReceiver(completeReceiver);
         }
     }
 
@@ -261,7 +282,7 @@ public class DownloadManagerController {
     private void registerContentObserver() {
         /** observer download change **/
         if (downloadObserver != null) {
-            mContext.getContentResolver().registerContentObserver(
+            DownloadProxy.obtain().getConfigBean().getContext().getContentResolver().registerContentObserver(
                     Uri.parse("content://downloads/my_downloads"), false, downloadObserver);
         }
     }
@@ -271,7 +292,7 @@ public class DownloadManagerController {
      */
     private void unregisterContentObserver() {
         if (downloadObserver != null) {
-            mContext.getContentResolver().unregisterContentObserver(downloadObserver);
+            DownloadProxy.obtain().getConfigBean().getContext().getContentResolver().unregisterContentObserver(downloadObserver);
         }
     }
 }
