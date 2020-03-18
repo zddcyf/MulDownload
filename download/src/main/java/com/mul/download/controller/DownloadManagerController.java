@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mul.download.bean.DownloadBean;
 import com.mul.download.click.OnProgressListener;
@@ -21,7 +22,7 @@ import java.util.List;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
- * @ProjectName: TO_Text
+ * @ProjectName: download
  * @Package: com.mul.download.controller
  * @ClassName: DownloadManagerController
  * @Author: zdd
@@ -42,6 +43,8 @@ public class DownloadManagerController {
     private OnProgressListener onProgressListener;
     private static final int HANDLE_DOWNLOAD = 0x001;
     private volatile List<DownloadBean> downloadBeans = new ArrayList<>();
+    private boolean isReset; // 是否需要重新下载。不可以重新下载则会提示下载信息
+    private String submit; // 不可重新下载的提示信息
 
     private DownloadManagerController() {
 
@@ -56,7 +59,13 @@ public class DownloadManagerController {
     }
 
     public DownloadManagerController init(Context mContext) {
+        return init(mContext, false, "正在下载中");
+    }
+
+    public DownloadManagerController init(Context mContext, boolean isReset, String submit) {
         this.mContext = mContext;
+        this.isReset = isReset;
+        this.submit = submit;
         manager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
         return this;
     }
@@ -68,6 +77,7 @@ public class DownloadManagerController {
 
     public void unRegisterDownload() {
         for (DownloadBean downloadBean : downloadBeans) {
+            remoe(downloadBean.getDownloadId());
 //            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
         }
         unRegisterReceiver();
@@ -75,7 +85,18 @@ public class DownloadManagerController {
     }
 
     /**
-     * 开启下载
+     * 开启下载(单个文件下载)
+     *
+     * @param downloadPath 下载路径
+     * @param filePath     文件存放路径
+     * @param fileName     文件名称
+     */
+    public DownloadManagerController download(String downloadPath, String filePath, String fileName) {
+        return download(downloadPath, filePath, fileName, 0);
+    }
+
+    /**
+     * 开启下载(存在列表下载时)
      *
      * @param downloadPath 下载路径
      * @param filePath     文件存放路径
@@ -83,8 +104,24 @@ public class DownloadManagerController {
      * @param position     第几个在下载
      */
     public DownloadManagerController download(String downloadPath, String filePath, String fileName, int position) {
-        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
+        int index = -1;
+        for (DownloadBean downloadBean : downloadBeans) {
+            if (downloadBean.getFileName().equals(fileName)) {
+                if (isReset) {
+                    index = downloadBeans.indexOf(downloadBean);
+                    remoe(downloadBean.getDownloadId());
+                } else {
+                    Toast.makeText(mContext, submit, Toast.LENGTH_SHORT).show();
+                    return this;
+                }
+            }
+        }
 
+        if (index != -1) {
+            downloadBeans.remove(index);
+        }
+
+        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
         registerContentObserver();
 
         Log.i(TAG, downloadPath);
@@ -126,7 +163,11 @@ public class DownloadManagerController {
                     DownloadBean downloadBean = downloadBeans.get(position);
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
-                        downloadBeans.remove((int) msg.obj);
+                        if (downloadBeans.size() == (int) msg.obj) {
+                            downloadBeans.remove(downloadBeans.size() - 1);
+                        } else {
+                            downloadBeans.remove((int) msg.obj);
+                        }
 //                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {

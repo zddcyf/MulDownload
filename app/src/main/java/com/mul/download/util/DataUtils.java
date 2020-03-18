@@ -71,7 +71,7 @@ public class DataUtils {
                             , false
                             , languageBeans.size() == 1 ? true : false));
                 } else {
-                    if (SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) == 0L) {
+//                    if (SpUtil.getInstance().getValue(LanguageNameUtils.getLanguageName(file.getName()), 0L) == 0L) {
                         languageBeans.add(new LanguageBean(3
                                 , LanguageNameUtils.getLanguageName(file.getName())
                                 , file.getName()
@@ -80,7 +80,7 @@ public class DataUtils {
                                 , true
                                 , false));
                         downloadLanguageBeans.remove(LanguageNameUtils.getLanguageName(file.getName()));
-                    }
+//                    }
                 }
             }
         }

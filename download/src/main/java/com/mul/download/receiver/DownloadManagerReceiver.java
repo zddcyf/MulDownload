@@ -4,11 +4,10 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.receiver
+ * @ProjectName: download
+ * @Package: com.mul.download.receiver
  * @ClassName: DownloadManagerReceiver
  * @Author: zdd
  * @CreateDate: 2019/9/3 11:03
@@ -24,7 +23,7 @@ public class DownloadManagerReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
             // 下载成功
             long downId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            Toast.makeText(context, intent.getAction() + "id : " + downId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, intent.getAction() + "id : " + downId, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -21,8 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.receiver
+ * @ProjectName: download
+ * @Package: com.mul.download.receiver
  * @ClassName: DownloadServise
  * @Author: zdd
  * @CreateDate: 2019/9/3 16:30

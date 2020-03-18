@@ -8,8 +8,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.observer
+ * @ProjectName: download
+ * @Package: com.mul.download.observer
  * @ClassName: DownloadChangeObserver
  * @Author: zdd
  * @CreateDate: 2019/9/3 16:57

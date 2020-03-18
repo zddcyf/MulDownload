@@ -3,8 +3,8 @@ package com.mul.download.click;
 import com.mul.download.bean.DownloadBean;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.click
+ * @ProjectName: download
+ * @Package: com.mul.download.click
  * @ClassName: OnProgressListener
  * @Author: zdd
  * @CreateDate: 2019/9/3 17:09

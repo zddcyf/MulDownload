@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void itemSwitchClick(LanguageBean languageBean) {
                 Log.i(TAG, "itemSwitchClick::::::切换语言项");
-                DownloadManagerController.getInstance().remoe(SpUtil.getInstance().getValue("ceshi", 0L));
+//                DownloadManagerController.getInstance().remoe(SpUtil.getInstance().getValue("ceshi", 0L));
                 if (!languageBean.isSelect()) {
                     rvAdapter.setDatas(DataUtils.getInstance().updateData(languageBean));
                 }

@@ -1,12 +1,12 @@
 package com.mul.download.bean;
 
 /**
- * @ProjectName: TO_Text
- * @Package: com.iguan.text.download.bean
+ * @ProjectName: download
+ * @Package: com.mul.download.bean
  * @ClassName: DownloadBean
  * @Author: zdd
  * @CreateDate: 2019/9/4 15:07
- * @Description: 类的作用描述
+ * @Description: 下载数据信息
  * @UpdateUser: 更新者
  * @UpdateDate: 2019/9/4 15:07
  * @UpdateRemark: 更新说明
