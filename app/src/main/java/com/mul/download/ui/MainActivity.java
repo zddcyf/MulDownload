@@ -1,6 +1,8 @@
 package com.mul.download.ui;
 
 import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,13 +48,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        startActivity(intent);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         FileAccessor.initFileAccess();
         DataUtils.getInstance();
 //        DownloadManagerController.getInstance().init(MainActivity.this);
-        DownloadProxy.obtain().init(new DownloadConfigBean().setContext(this));
+        DownloadProxy.obtain().init(new DownloadConfigBean().setContext(this).setNotificationVisibility(true));
         initView();
         initRv();
         initClick();
@@ -178,10 +182,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void permissionSuccess(int requestCode) {
-        DownloadProxy.obtain().download("https://ig-apply.oss-cn-beijing.aliyuncs.com/asrOn-X6L-0.9.28-20190717.apk"
+        DownloadProxy.obtain().download("https://cdn-dl.yinxiang.com/YXWin6/public/Evernote_6.21.10.2263.exe"
                 , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
-                , languageBean.getFileName()
-                , languageBean.getPosition())
+                , languageBean.getFileName())
+//                , languageBean.getPosition())
                 .setOnProgressListener(new OnProgressListener() {
                     @Override
                     public void onProgress(DownloadBean downloadBean) {
@@ -197,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(DownloadBean downloadBean) {
                         DataUtils.getInstance().setData();
                         rvAdapter.setDatas(DataUtils.getInstance().getDatas());
+                    }
+
+                    @Override
+                    public void onFailed(DownloadBean downloadBean) {
+
                     }
                 });
     }

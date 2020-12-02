@@ -3,6 +3,7 @@ package com.mul.download.proxy;
 import android.util.Log;
 
 import com.mul.download.base.BaseDownloadController;
+import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.DownloadConfigBean;
 import com.mul.download.click.OnProgressListener;
 import com.mul.download.controller.DownloadManagerController;
@@ -20,7 +21,7 @@ import com.mul.download.enums.DownloadTypeEnum;
  * @UpdateRemark: 更新说明
  * @Version: 1.0.0
  */
-public class DownloadProxy {
+public class DownloadProxy<T> {
     private static String TAG = "com.mul.download.proxy.DownloadProxy";
 
     private BaseDownloadController downloadController;
@@ -160,12 +161,46 @@ public class DownloadProxy {
      *
      * @param onProgressListener
      */
-    public void setOnProgressListener(OnProgressListener onProgressListener) {
+    public void setOnProgressListener(final com.mul.download.click.OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return;
         }
         downloadController.setOnProgressListener(onProgressListener);
+    }
+
+    /**
+     * 设置回调监听
+     *
+     * @param onProgressListener
+     */
+    public void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
+        if (null == downloadController) {
+            Log.d(TAG, "please call the init()");
+            return;
+        }
+        downloadController.setOnProgressListener(new com.mul.download.click.OnProgressListener() {
+            @Override
+            public void onProgress(DownloadBean downloadBean) {
+                if (null != onProgressListener) {
+                    onProgressListener.onProgress(downloadBean);
+                }
+            }
+
+            @Override
+            public void onSuccess(DownloadBean downloadBean) {
+                if (null != onProgressListener) {
+                    onProgressListener.onSuccess(t, downloadBean);
+                }
+            }
+
+            @Override
+            public void onFailed(DownloadBean downloadBean) {
+                if (null != onProgressListener) {
+                    onProgressListener.onFailed(downloadBean);
+                }
+            }
+        });
     }
 
     /**
@@ -175,5 +210,24 @@ public class DownloadProxy {
      */
     public DownloadConfigBean getConfigBean() {
         return downloadConfigBean;
+    }
+
+    public interface OnProgressListener {
+        /**
+         * 下载进度
+         */
+        void onProgress(DownloadBean downloadBean);
+
+        /**
+         * 下载成功
+         */
+        <T> void onSuccess(T t, DownloadBean downloadBean);
+
+        /**
+         * 下载失败
+         *
+         * @param downloadBean
+         */
+        void onFailed(DownloadBean downloadBean);
     }
 }

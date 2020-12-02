@@ -24,4 +24,11 @@ public interface OnProgressListener {
      * 下载成功
      */
     void onSuccess(DownloadBean downloadBean);
+
+    /**
+     * 下载失败
+     *
+     * @param downloadBean
+     */
+    void onFailed(DownloadBean downloadBean);
 }

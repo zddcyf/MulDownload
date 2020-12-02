@@ -40,6 +40,7 @@ public class DownloadManagerController extends BaseDownloadController {
     private DownloadChangeObserver downloadObserver;
     private OnProgressListener onProgressListener;
     private static final int HANDLE_DOWNLOAD = 0x001;
+    private static final int HANDLE_DOWNLOAD_FAILED = 0x002;
 
     @Override
     public void init() {
@@ -191,6 +192,8 @@ public class DownloadManagerController extends BaseDownloadController {
                         onProgressListener.onProgress(downloadBean);
                     }
                 }
+            } else if (HANDLE_DOWNLOAD_FAILED == msg.what) {
+                onProgressListener.onFailed((DownloadBean) msg.obj);
             }
         }
     };
@@ -217,10 +220,14 @@ public class DownloadManagerController extends BaseDownloadController {
      * 将查询结果从子线程中发往主线程（handler方式），以防止ANR
      */
     private void updateProgress() {
-        for (int i = 0; i < downloadBeans.size(); i++) {
-            int[] bytesAndStatus = getBytesAndStatus(downloadBeans.get(i).getDownloadId());
+        for (DownloadBean mDownloadBean : downloadBeans) {
+            int[] bytesAndStatus = getBytesAndStatus(mDownloadBean.getDownloadId());
+            if (bytesAndStatus[2] == DownloadManager.STATUS_FAILED) {
+                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_FAILED, mDownloadBean));
+            } else {
 //        downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]));
-            downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], i));
+                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], downloadBeans.indexOf(mDownloadBean)));
+            }
         }
     }
 
