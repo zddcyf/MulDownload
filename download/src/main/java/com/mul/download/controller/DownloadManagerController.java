@@ -167,21 +167,22 @@ public class DownloadManagerController extends BaseDownloadController {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
                     Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::" + (int) msg.obj);
-                    int position = (int) msg.obj;
-                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
-                        --position;
-                    }
-                    if (position > downloadBeans.size()) {
-                        position = downloadBeans.size() - 1;
-                    }
-                    DownloadBean downloadBean = downloadBeans.get(position);
+//                    int position = (int) msg.obj;
+//                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
+//                        --position;
+//                    }
+//                    if (position > downloadBeans.size()) {
+//                        position = downloadBeans.size() - 1;
+//                    }
+                    DownloadBean downloadBean = (DownloadBean) msg.obj;
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress == 1) {
-                        if (downloadBeans.size() == (int) msg.obj) {
-                            downloadBeans.remove(downloadBeans.size() - 1);
-                        } else {
-                            downloadBeans.remove((int) msg.obj);
-                        }
+                        downloadBeans.remove(downloadBean);
+//                        if (downloadBeans.size() == (int) msg.obj) {
+//                            downloadBeans.remove(downloadBeans.size() - 1);
+//                        } else {
+//                            downloadBeans.remove((int) msg.obj);
+//                        }
 //                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
@@ -223,7 +224,7 @@ public class DownloadManagerController extends BaseDownloadController {
                 downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_FAILED, mDownloadBean));
             } else {
 //        downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]));
-                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], downloadBeans.indexOf(mDownloadBean)));
+                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], mDownloadBean));
             }
         }
     }

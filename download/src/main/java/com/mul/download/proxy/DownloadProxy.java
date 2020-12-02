@@ -5,7 +5,6 @@ import android.util.Log;
 import com.mul.download.base.BaseDownloadController;
 import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.DownloadConfigBean;
-import com.mul.download.click.OnProgressListener;
 import com.mul.download.controller.DownloadManagerController;
 import com.mul.download.enums.DownloadTypeEnum;
 
@@ -174,7 +173,7 @@ public class DownloadProxy {
      *
      * @param onProgressListener
      */
-    public <T> void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
+    public void setOnProgressListener(final Object t, final OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return;
@@ -212,7 +211,7 @@ public class DownloadProxy {
         return downloadConfigBean;
     }
 
-    public interface OnProgressListener {
+    public interface OnProgressListener<T> {
         /**
          * 下载进度
          */
@@ -221,7 +220,7 @@ public class DownloadProxy {
         /**
          * 下载成功
          */
-        <T> void onSuccess(T t, DownloadBean downloadBean);
+        void onSuccess(T t, DownloadBean downloadBean);
 
         /**
          * 下载失败
