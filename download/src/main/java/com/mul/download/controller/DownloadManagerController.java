@@ -132,9 +132,6 @@ public class DownloadManagerController extends BaseDownloadController {
             downloadBeans.remove(index);
         }
 
-        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
-        registerContentObserver();
-
         Log.i(TAG, downloadPath);
         //创建下载请求
         DownloadManager.Request down = new DownloadManager.Request(Uri.parse(downloadPath));
@@ -283,6 +280,7 @@ public class DownloadManagerController extends BaseDownloadController {
      * 注册ContentObserver
      */
     private void registerContentObserver() {
+        downloadObserver = new DownloadChangeObserver(downLoadHandler, progressRunnable);
         /** observer download change **/
         if (downloadObserver != null) {
             DownloadProxy.obtain().getConfigBean().getContext().getContentResolver().registerContentObserver(
