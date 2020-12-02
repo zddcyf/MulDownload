@@ -21,7 +21,7 @@ import com.mul.download.enums.DownloadTypeEnum;
  * @UpdateRemark: 更新说明
  * @Version: 1.0.0
  */
-public class DownloadProxy<T> {
+public class DownloadProxy {
     private static String TAG = "com.mul.download.proxy.DownloadProxy";
 
     private BaseDownloadController downloadController;
@@ -174,7 +174,7 @@ public class DownloadProxy<T> {
      *
      * @param onProgressListener
      */
-    public void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
+    public <T> void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return;
