@@ -173,7 +173,7 @@ public class DownloadProxy {
      *
      * @param onProgressListener
      */
-    public void setOnProgressListener(final Object t, final OnProgressListener onProgressListener) {
+    public <T> void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return;
