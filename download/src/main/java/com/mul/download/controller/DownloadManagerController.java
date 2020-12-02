@@ -166,7 +166,7 @@ public class DownloadManagerController extends BaseDownloadController {
             if (onProgressListener != null && HANDLE_DOWNLOAD == msg.what) {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
-                    Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::" + (int) msg.obj);
+                    Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::");
 //                    int position = (int) msg.obj;
 //                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
 //                        --position;
