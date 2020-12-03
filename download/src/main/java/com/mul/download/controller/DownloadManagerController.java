@@ -41,8 +41,9 @@ public class DownloadManagerController extends BaseDownloadController {
     private DownloadManagerReceiver completeReceiver;
     private DownloadChangeObserver downloadObserver;
     private OnProgressListener onProgressListener;
-    private static final int HANDLE_DOWNLOAD = 0x001;
-    private static final int HANDLE_DOWNLOAD_FAILED = 0x002;
+    private static final int HANDLE_DOWNLOAD_SUCCESS = 0x001;
+    private static final int HANDLE_DOWNLOAD_PROGRESS = 0x002;
+    private static final int HANDLE_DOWNLOAD_FAILED = 0x003;
 
     @Override
     public void init() {
@@ -165,30 +166,33 @@ public class DownloadManagerController extends BaseDownloadController {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (onProgressListener != null && HANDLE_DOWNLOAD == msg.what) {
+            if (onProgressListener != null && HANDLE_DOWNLOAD_SUCCESS == msg.what) {
                 //被除数可以为0，除数必须大于0
-                if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
-                    DownloadBean downloadBean = (DownloadBean) msg.obj;
-                    float progress = (float) msg.arg1 / (float) msg.arg2;
-                    Log.i(TAG, "下载中" + "progress=" + progress);
-                    if (progress >= 1.0f) {
-                        Log.i(TAG, "下载成功" + "progress=" + progress + "  下载状态" + (progress >= 1.0f));
-                        downloadBean.setProgress(progress);
-                        onProgressListener.onSuccess(downloadBean);
-                        remove(downloadBean.getDownloadId());
-                        downloadBeans.remove(downloadBean);
-                    } else if (progress != downloadBean.getProgress()) {
-                        Log.i(TAG, "下载中");
-                        downloadBean.setProgress(progress);
-                        onProgressListener.onProgress(downloadBean);
-                    }
-                }
+                onProgressListener.onSuccess((DownloadBean) msg.obj);
+//                if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
+//                    DownloadBean downloadBean = (DownloadBean) msg.obj;
+//                    float progress = (float) msg.arg1 / (float) msg.arg2;
+//                    Log.i(TAG, "下载中" + "progress=" + progress);
+//                    if (progress >= 1.0f) {
+//                        Log.i(TAG, "下载成功" + "progress=" + progress + "  下载状态" + (progress >= 1.0f));
+//                        downloadBean.setProgress(progress);
+//                        remove(downloadBean.getDownloadId());
+//                        downloadBeans.remove(downloadBean);
+//                        onProgressListener.onSuccess(downloadBean);
+//                    } else if (progress != downloadBean.getProgress()) {
+//                        Log.i(TAG, "下载中");
+//                        downloadBean.setProgress(progress);
+//                        onProgressListener.onProgress(downloadBean);
+//                    }
+//                }
+            } else if (onProgressListener != null && HANDLE_DOWNLOAD_PROGRESS == msg.what) {
+                onProgressListener.onProgress((DownloadBean) msg.obj);
             } else if (onProgressListener != null && HANDLE_DOWNLOAD_FAILED == msg.what) {
                 Log.i(TAG, "下载失败");
-                DownloadBean downloadBean = (DownloadBean) msg.obj;
-                onProgressListener.onFailed(downloadBean);
-                remove(downloadBean.getDownloadId());
-                downloadBeans.remove(downloadBean);
+//                DownloadBean downloadBean = (DownloadBean) msg.obj;
+//                remove(downloadBean.getDownloadId());
+//                downloadBeans.remove(downloadBean);
+                onProgressListener.onFailed((DownloadBean) msg.obj);
             }
         }
     };
@@ -220,10 +224,21 @@ public class DownloadManagerController extends BaseDownloadController {
             DownloadBean mDownloadBean = mIterator.next();
             int[] bytesAndStatus = getBytesAndStatus(mDownloadBean.getDownloadId());
             if (bytesAndStatus[2] == DownloadManager.STATUS_FAILED) {
+                remove(mDownloadBean.getDownloadId());
+                downloadBeans.remove(mDownloadBean);
                 downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_FAILED, mDownloadBean));
             } else {
-//        downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], bytesAndStatus[2]));
-                downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD, bytesAndStatus[0], bytesAndStatus[1], mDownloadBean));
+                float progress = (float) bytesAndStatus[0] / (float) bytesAndStatus[1];
+                if (progress >= 1.0f) {
+                    Log.i(TAG, "下载成功" + "progress=" + progress + "  下载状态" + (progress >= 1.0f));
+                    remove(mDownloadBean.getDownloadId());
+                    downloadBeans.remove(mDownloadBean);
+                    downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_SUCCESS, mDownloadBean));
+                } else {
+                    Log.i(TAG, "下载中");
+                    mDownloadBean.setProgress(progress);
+                    downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_PROGRESS, mDownloadBean));
+                }
             }
         }
     }
