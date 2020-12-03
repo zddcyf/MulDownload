@@ -37,6 +37,6 @@ public class DownloadChangeObserver extends ContentObserver {
      */
     @Override
     public void onChange(boolean selfChange) {
-        mScheduledExecutorService.scheduleAtFixedRate(progressRunnable, 500, 400, TimeUnit.SECONDS); //在子线程中查询
+        mScheduledExecutorService.scheduleAtFixedRate(progressRunnable, 1, 1, TimeUnit.SECONDS); //在子线程中查询
     }
 }
