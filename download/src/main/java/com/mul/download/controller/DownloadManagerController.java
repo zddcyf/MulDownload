@@ -210,13 +210,7 @@ public class DownloadManagerController extends BaseDownloadController {
     private Runnable progressRunnable = new Runnable() {
         @Override
         public void run() {
-            try {
-                progressRunnable.wait();
-                updateProgress();
-                progressRunnable.notify();
-            } catch (Exception mE) {
-                mE.printStackTrace();
-            }
+            updateProgress();
         }
     };
 
