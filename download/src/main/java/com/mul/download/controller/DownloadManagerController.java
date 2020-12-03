@@ -166,21 +166,24 @@ public class DownloadManagerController extends BaseDownloadController {
             if (onProgressListener != null && HANDLE_DOWNLOAD == msg.what) {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
-                    Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::");
                     DownloadBean downloadBean = (DownloadBean) msg.obj;
                     float progress = msg.arg1 / (float) msg.arg2;
                     if (progress >= 1) {
+                        Log.i(TAG, "下载成功" + "progress=" + progress +"  下载状态" + (progress >= 1));
                         remove(downloadBean.getDownloadId());
                         downloadBeans.remove(downloadBean);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
+                        Log.i(TAG, "下载中");
                         downloadBean.setProgress(progress);
                         onProgressListener.onProgress(downloadBean);
                     }
                 }
-            } else if (HANDLE_DOWNLOAD_FAILED == msg.what) {
+            } else if (onProgressListener != null && HANDLE_DOWNLOAD_FAILED == msg.what) {
+                Log.i(TAG, "下载失败");
                 DownloadBean downloadBean = (DownloadBean) msg.obj;
                 remove(downloadBean.getDownloadId());
+                downloadBeans.remove(downloadBean);
                 onProgressListener.onFailed(downloadBean);
             }
         }
