@@ -17,11 +17,13 @@ public class DownloadBean {
     private long downloadId;
     private int position;
     private float progress;
+    private Object mData;
 
-    public DownloadBean(String fileName, long downloadId, int position) {
+    public DownloadBean(String fileName, long downloadId, int position, Object mData) {
         this.fileName = fileName;
         this.downloadId = downloadId;
         this.position = position;
+        this.mData = mData;
     }
 
     public String getFileName() {
@@ -54,5 +56,13 @@ public class DownloadBean {
 
     public void setProgress(float progress) {
         this.progress = progress;
+    }
+
+    public Object getData() {
+        return mData;
+    }
+
+    public void setData(Object mData) {
+        this.mData = mData;
     }
 }

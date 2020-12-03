@@ -56,7 +56,7 @@ public class DownloadManagerController extends BaseDownloadController {
     @Override
     public void unRegisterDownload() {
         for (DownloadBean downloadBean : downloadBeans) {
-            remoe(downloadBean.getDownloadId());
+            remove(downloadBean.getDownloadId());
 //            SpUtil.getInstance().getValue(downloadBean.getFileName(), downloadBean.getDownloadId());
         }
         downloadBeans.clear();
@@ -119,7 +119,7 @@ public class DownloadManagerController extends BaseDownloadController {
             if (downloadBean.getFileName().equals(fileName)) {
                 if (DownloadProxy.obtain().getConfigBean().isReset()) {
                     index = downloadBeans.indexOf(downloadBean);
-                    remoe(downloadBean.getDownloadId());
+                    remove(downloadBean.getDownloadId());
                 } else {
                     Toast.makeText(DownloadProxy.obtain().getConfigBean().getContext()
                             , DownloadProxy.obtain().getConfigBean().getSubmit(), Toast.LENGTH_SHORT).show();
@@ -145,7 +145,7 @@ public class DownloadManagerController extends BaseDownloadController {
         //设置下载后文件存放的位置
         down.setDestinationInExternalPublicDir(filePath, fileName);
         //将下载请求放入队列
-        downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position));
+        downloadBeans.add(new DownloadBean(fileName, manager.enqueue(down), position, DownloadProxy.obtain().getData()));
     }
 
     /**
@@ -154,7 +154,7 @@ public class DownloadManagerController extends BaseDownloadController {
      * @param id
      */
     @Override
-    public void remoe(long... id) {
+    public void remove(long... id) {
         manager.remove(id);
     }
 
@@ -167,23 +167,11 @@ public class DownloadManagerController extends BaseDownloadController {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
                     Log.i(TAG, "数组的长度::::::" + downloadBeans.size() + "::::传入的数组坐标::::");
-//                    int position = (int) msg.obj;
-//                    if (position == downloadBeans.size()) { // 此处是为了防止数据保持同步
-//                        --position;
-//                    }
-//                    if (position > downloadBeans.size()) {
-//                        position = downloadBeans.size() - 1;
-//                    }
                     DownloadBean downloadBean = (DownloadBean) msg.obj;
                     float progress = msg.arg1 / (float) msg.arg2;
-                    if (progress == 1) {
+                    if (progress >= 1) {
+                        remove(downloadBean.getDownloadId());
                         downloadBeans.remove(downloadBean);
-//                        if (downloadBeans.size() == (int) msg.obj) {
-//                            downloadBeans.remove(downloadBeans.size() - 1);
-//                        } else {
-//                            downloadBeans.remove((int) msg.obj);
-//                        }
-//                        SpUtil.getInstance().getValue(downloadBean.getFileName(), 0L);
                         onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
                         downloadBean.setProgress(progress);
@@ -191,7 +179,9 @@ public class DownloadManagerController extends BaseDownloadController {
                     }
                 }
             } else if (HANDLE_DOWNLOAD_FAILED == msg.what) {
-                onProgressListener.onFailed((DownloadBean) msg.obj);
+                DownloadBean downloadBean = (DownloadBean) msg.obj;
+                remove(downloadBean.getDownloadId());
+                onProgressListener.onFailed(downloadBean);
             }
         }
     };

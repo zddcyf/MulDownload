@@ -77,7 +77,7 @@ public abstract class BaseDownloadController {
      *
      * @param id
      */
-    public abstract void remoe(long... id);
+    public abstract void remove(long... id);
 
     /**
      * 设置回调监听

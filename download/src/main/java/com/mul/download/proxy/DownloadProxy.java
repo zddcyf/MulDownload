@@ -5,6 +5,7 @@ import android.util.Log;
 import com.mul.download.base.BaseDownloadController;
 import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.DownloadConfigBean;
+import com.mul.download.click.OnProgressListener;
 import com.mul.download.controller.DownloadManagerController;
 import com.mul.download.enums.DownloadTypeEnum;
 
@@ -25,6 +26,7 @@ public class DownloadProxy {
 
     private BaseDownloadController downloadController;
     private DownloadConfigBean downloadConfigBean;
+    private Object mData;
 
     private DownloadProxy() {
     }
@@ -35,6 +37,14 @@ public class DownloadProxy {
 
     private static class DownloadProxyObtain {
         private static final DownloadProxy DOWNLOAD_PROXY = new DownloadProxy();
+    }
+
+    public void setData(Object mData) {
+        this.mData = mData;
+    }
+
+    public Object getData() {
+        return mData;
     }
 
     /**
@@ -152,7 +162,7 @@ public class DownloadProxy {
             Log.d(TAG, "please call the init()");
             return;
         }
-        downloadController.remoe(id);
+        downloadController.remove(id);
     }
 
     /**
@@ -160,46 +170,12 @@ public class DownloadProxy {
      *
      * @param onProgressListener
      */
-    public void setOnProgressListener(final com.mul.download.click.OnProgressListener onProgressListener) {
+    public void setOnProgressListener(final OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return;
         }
         downloadController.setOnProgressListener(onProgressListener);
-    }
-
-    /**
-     * 设置回调监听
-     *
-     * @param onProgressListener
-     */
-    public <T> void setOnProgressListener(final T t, final OnProgressListener onProgressListener) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return;
-        }
-        downloadController.setOnProgressListener(new com.mul.download.click.OnProgressListener() {
-            @Override
-            public void onProgress(DownloadBean downloadBean) {
-                if (null != onProgressListener) {
-                    onProgressListener.onProgress(downloadBean);
-                }
-            }
-
-            @Override
-            public void onSuccess(DownloadBean downloadBean) {
-                if (null != onProgressListener) {
-                    onProgressListener.onSuccess(t, downloadBean);
-                }
-            }
-
-            @Override
-            public void onFailed(DownloadBean downloadBean) {
-                if (null != onProgressListener) {
-                    onProgressListener.onFailed(downloadBean);
-                }
-            }
-        });
     }
 
     /**
@@ -209,24 +185,5 @@ public class DownloadProxy {
      */
     public DownloadConfigBean getConfigBean() {
         return downloadConfigBean;
-    }
-
-    public interface OnProgressListener<T> {
-        /**
-         * 下载进度
-         */
-        void onProgress(DownloadBean downloadBean);
-
-        /**
-         * 下载成功
-         */
-        void onSuccess(T t, DownloadBean downloadBean);
-
-        /**
-         * 下载失败
-         *
-         * @param downloadBean
-         */
-        void onFailed(DownloadBean downloadBean);
     }
 }
