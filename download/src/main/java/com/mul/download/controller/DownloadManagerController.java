@@ -223,7 +223,7 @@ public class DownloadManagerController extends BaseDownloadController {
         while (mIterator.hasNext()) {
             DownloadBean mDownloadBean = mIterator.next();
             int[] bytesAndStatus = getBytesAndStatus(mDownloadBean.getDownloadId());
-            if (bytesAndStatus[2] == DownloadManager.STATUS_FAILED) {
+            if (bytesAndStatus[2] == DownloadManager.STATUS_FAILED) { // 下载失败
                 remove(mDownloadBean.getDownloadId());
                 downloadBeans.remove(mDownloadBean);
                 downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_FAILED, mDownloadBean));
@@ -231,7 +231,6 @@ public class DownloadManagerController extends BaseDownloadController {
                 float progress = (float) bytesAndStatus[0] / (float) bytesAndStatus[1];
                 if (progress >= 1.0f) {
                     Log.i(TAG, "下载成功" + "progress=" + progress + "  下载状态" + (progress >= 1.0f));
-                    remove(mDownloadBean.getDownloadId());
                     downloadBeans.remove(mDownloadBean);
                     downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_SUCCESS, mDownloadBean));
                 } else {
