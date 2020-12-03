@@ -39,8 +39,9 @@ public class DownloadProxy {
         private static final DownloadProxy DOWNLOAD_PROXY = new DownloadProxy();
     }
 
-    public void setData(Object mData) {
+    public DownloadProxy setData(Object mData) {
         this.mData = mData;
+        return this;
     }
 
     public Object getData() {
