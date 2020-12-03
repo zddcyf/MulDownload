@@ -18,6 +18,8 @@ import com.mul.download.observer.DownloadChangeObserver;
 import com.mul.download.proxy.DownloadProxy;
 import com.mul.download.receiver.DownloadManagerReceiver;
 
+import java.util.Iterator;
+
 import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
@@ -213,7 +215,9 @@ public class DownloadManagerController extends BaseDownloadController {
      * 将查询结果从子线程中发往主线程（handler方式），以防止ANR
      */
     private void updateProgress() {
-        for (DownloadBean mDownloadBean : downloadBeans) {
+        Iterator<DownloadBean> mIterator = downloadBeans.iterator();
+        while (mIterator.hasNext()) {
+            DownloadBean mDownloadBean = mIterator.next();
             int[] bytesAndStatus = getBytesAndStatus(mDownloadBean.getDownloadId());
             if (bytesAndStatus[2] == DownloadManager.STATUS_FAILED) {
                 downLoadHandler.sendMessage(downLoadHandler.obtainMessage(HANDLE_DOWNLOAD_FAILED, mDownloadBean));
