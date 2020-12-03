@@ -167,12 +167,14 @@ public class DownloadManagerController extends BaseDownloadController {
                 //被除数可以为0，除数必须大于0
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
                     DownloadBean downloadBean = (DownloadBean) msg.obj;
-                    float progress = msg.arg1 / (float) msg.arg2;
+                    float progress = (float) msg.arg1 / (float) msg.arg2;
+                    Log.i(TAG, "下载中" + "progress=" + progress);
                     if (progress >= 1.0f) {
-                        Log.i(TAG, "下载成功" + "progress=" + progress +"  下载状态" + (progress >= 1.0f));
+                        Log.i(TAG, "下载成功" + "progress=" + progress + "  下载状态" + (progress >= 1.0f));
+                        downloadBean.setProgress(progress);
+                        onProgressListener.onSuccess(downloadBean);
                         remove(downloadBean.getDownloadId());
                         downloadBeans.remove(downloadBean);
-                        onProgressListener.onSuccess(downloadBean);
                     } else if (progress != downloadBean.getProgress()) {
                         Log.i(TAG, "下载中");
                         downloadBean.setProgress(progress);
@@ -182,9 +184,9 @@ public class DownloadManagerController extends BaseDownloadController {
             } else if (onProgressListener != null && HANDLE_DOWNLOAD_FAILED == msg.what) {
                 Log.i(TAG, "下载失败");
                 DownloadBean downloadBean = (DownloadBean) msg.obj;
+                onProgressListener.onFailed(downloadBean);
                 remove(downloadBean.getDownloadId());
                 downloadBeans.remove(downloadBean);
-                onProgressListener.onFailed(downloadBean);
             }
         }
     };
