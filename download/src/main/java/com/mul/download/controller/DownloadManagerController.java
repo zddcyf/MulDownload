@@ -168,8 +168,8 @@ public class DownloadManagerController extends BaseDownloadController {
                 if (msg.arg1 >= 0 && msg.arg2 > 0 && downloadBeans.size() > 0) {
                     DownloadBean downloadBean = (DownloadBean) msg.obj;
                     float progress = msg.arg1 / (float) msg.arg2;
-                    if (progress >= 1) {
-                        Log.i(TAG, "下载成功" + "progress=" + progress +"  下载状态" + (progress >= 1));
+                    if (progress >= 1.0f) {
+                        Log.i(TAG, "下载成功" + "progress=" + progress +"  下载状态" + (progress >= 1.0f));
                         remove(downloadBean.getDownloadId());
                         downloadBeans.remove(downloadBean);
                         onProgressListener.onSuccess(downloadBean);
