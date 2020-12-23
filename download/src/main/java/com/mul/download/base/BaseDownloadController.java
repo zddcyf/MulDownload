@@ -40,23 +40,6 @@ public abstract class BaseDownloadController {
      * 开启下载(单个文件下载)
      *
      * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     */
-    public abstract void download(String downloadPath, String fileName);
-
-    /**
-     * 开启下载(存在列表下载时)
-     *
-     * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     * @param position     第几个在下载
-     */
-    public abstract void download(String downloadPath, String fileName, int position);
-
-    /**
-     * 开启下载(单个文件下载)
-     *
-     * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      */

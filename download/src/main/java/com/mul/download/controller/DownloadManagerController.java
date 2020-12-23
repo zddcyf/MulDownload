@@ -71,29 +71,6 @@ public class DownloadManagerController extends BaseDownloadController {
      * 开启下载(单个文件下载)
      *
      * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     */
-    @Override
-    public void download(String downloadPath, String fileName) {
-        download(downloadPath, DownloadProxy.obtain().getConfigBean().getFilePath(), fileName, 0);
-    }
-
-    /**
-     * 开启下载(存在列表下载时)
-     *
-     * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     * @param position     第几个在下载
-     */
-    @Override
-    public void download(String downloadPath, String fileName, int position) {
-        download(downloadPath, DownloadProxy.obtain().getConfigBean().getFilePath(), fileName, position);
-    }
-
-    /**
-     * 开启下载(单个文件下载)
-     *
-     * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      */

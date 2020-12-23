@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
-        startActivity(intent);
+//        Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+//        startActivity(intent);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }

@@ -16,7 +16,6 @@ import android.content.Context;
  */
 public class DownloadConfigBean {
     private Context mContext; // 上下文
-    private String mFilePath; // 文件路径
     private boolean isReset = false; // 是否需要重新下载。不可以重新下载则会提示下载信息
     private boolean isVisibleInDownloadsUi = false; // 显示下载界面
     private boolean isNotificationVisibility = false; // 是否显示后台下载
@@ -28,15 +27,6 @@ public class DownloadConfigBean {
 
     public DownloadConfigBean setContext(Context mContext) {
         this.mContext = mContext;
-        return this;
-    }
-
-    public String getFilePath() {
-        return mFilePath;
-    }
-
-    public DownloadConfigBean setFilePath(String mFilePath) {
-        this.mFilePath = mFilePath;
         return this;
     }
 

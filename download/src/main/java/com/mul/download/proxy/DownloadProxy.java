@@ -93,37 +93,6 @@ public class DownloadProxy {
      * 开启下载(单个文件下载)
      *
      * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     */
-    public DownloadProxy download(String downloadPath, String fileName) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return this;
-        }
-        downloadController.download(downloadPath, fileName);
-        return this;
-    }
-
-    /**
-     * 开启下载(存在列表下载时)
-     *
-     * @param downloadPath 下载路径
-     * @param fileName     文件名称
-     * @param position     第几个在下载
-     */
-    public DownloadProxy download(String downloadPath, String fileName, int position) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return this;
-        }
-        downloadController.download(downloadPath, fileName, position);
-        return this;
-    }
-
-    /**
-     * 开启下载(单个文件下载)
-     *
-     * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      */
