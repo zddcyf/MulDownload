@@ -50,6 +50,10 @@ public class DataUtils {
                 , LanguageNameUtils.getLanguageName(FileConfig.DE), FileConfig.DE, "", true, true, false));
         downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.AR), new LanguageBean(LanguageCodeConfig.AR
                 , LanguageNameUtils.getLanguageName(FileConfig.AR), FileConfig.AR, "", true, true, false));
+        downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.ZH), new LanguageBean(LanguageCodeConfig.AR
+                , LanguageNameUtils.getLanguageName(FileConfig.ZH), FileConfig.ZH, "", true, true, false));
+        downloadLanguageBeans.put(LanguageNameUtils.getLanguageName(FileConfig.JP), new LanguageBean(LanguageCodeConfig.AR
+                , LanguageNameUtils.getLanguageName(FileConfig.JP), FileConfig.JP, "", true, true, false));
     }
 
     public void setData() {

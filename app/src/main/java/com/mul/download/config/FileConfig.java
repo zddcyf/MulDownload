@@ -26,4 +26,6 @@ public interface FileConfig {
 
     String DE = "德语";
     String AR = "阿拉伯语";
+    String ZH = "中文";
+    String JP = "日语";
 }

@@ -1,5 +1,7 @@
 package com.mul.download.bean;
 
+import com.mul.download.listener.OnProgressListener;
+
 /**
  * @ProjectName: MulDownload
  * @Package: com.mul.download.bean
@@ -13,13 +15,15 @@ package com.mul.download.bean;
  * @Version: v1.0.0
  */
 public class DownloadBean {
+    private OnProgressListener onProgressListener;
     private String fileName;
     private long downloadId;
     private int position;
     private float progress;
     private Object mData;
 
-    public DownloadBean(String fileName, long downloadId, int position, Object mData) {
+    public DownloadBean(OnProgressListener onProgressListener, String fileName, long downloadId, int position, Object mData) {
+        this.onProgressListener = onProgressListener;
         this.fileName = fileName;
         this.downloadId = downloadId;
         this.position = position;
@@ -64,5 +68,13 @@ public class DownloadBean {
 
     public void setData(Object mData) {
         this.mData = mData;
+    }
+
+    public OnProgressListener getOnProgressListener() {
+        return onProgressListener;
+    }
+
+    public void setOnProgressListener(OnProgressListener mOnProgressListener) {
+        onProgressListener = mOnProgressListener;
     }
 }

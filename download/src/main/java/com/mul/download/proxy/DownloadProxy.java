@@ -3,11 +3,12 @@ package com.mul.download.proxy;
 import android.util.Log;
 
 import com.mul.download.base.BaseDownloadController;
-import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.DownloadConfigBean;
-import com.mul.download.click.OnProgressListener;
+import com.mul.download.listener.OnProgressListener;
 import com.mul.download.controller.DownloadManagerController;
 import com.mul.download.enums.DownloadTypeEnum;
+import com.mul.download.manager.DownloadManager;
+import com.mul.download.manager.DownloadStatusManager;
 
 /**
  * @ProjectName: MulDownload
@@ -22,7 +23,7 @@ import com.mul.download.enums.DownloadTypeEnum;
  * @Version: 1.0.0
  */
 public class DownloadProxy {
-    private static String TAG = "com.mul.download.proxy.DownloadProxy";
+    public static String TAG = "DownloadProxy:::";
 
     private BaseDownloadController downloadController;
     private DownloadConfigBean downloadConfigBean;
@@ -49,28 +50,6 @@ public class DownloadProxy {
     }
 
     /**
-     * 注册服务
-     */
-    public void registerDownload() {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return;
-        }
-        downloadController.registerDownload();
-    }
-
-    /**
-     * 注销服务
-     */
-    public void unRegisterDownload() {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return;
-        }
-        downloadController.unRegisterDownload();
-    }
-
-    /**
      * 初始化下载器
      *
      * @param downloadConfigBean
@@ -90,62 +69,36 @@ public class DownloadProxy {
     }
 
     /**
-     * 开启下载(单个文件下载)
+     * 开启下载
      *
      * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      */
-    public DownloadProxy download(String downloadPath, String filePath, String fileName) {
+    public DownloadProxy download(String downloadPath, String filePath, String fileName, OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return this;
         }
-        downloadController.download(downloadPath, filePath, fileName);
+        downloadController.download(downloadPath, filePath, fileName, 0, onProgressListener);
         return this;
     }
 
     /**
-     * 开启下载(存在列表下载时)
+     * 开启下载
      *
      * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      * @param position     第几个在下载
      */
-    public DownloadProxy download(String downloadPath, String filePath, String fileName, int position) {
+    public DownloadProxy download(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return this;
         }
-        downloadController.download(downloadPath, filePath, fileName, position);
+        downloadController.download(downloadPath, filePath, fileName, position, onProgressListener);
         return this;
-    }
-
-    /**
-     * 删除下载or取消下载
-     *
-     * @param id
-     */
-    public void remoe(long... id) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return;
-        }
-        downloadController.remove(id);
-    }
-
-    /**
-     * 设置回调监听
-     *
-     * @param onProgressListener
-     */
-    public void setOnProgressListener(final OnProgressListener onProgressListener) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return;
-        }
-        downloadController.setOnProgressListener(onProgressListener);
     }
 
     /**
@@ -155,5 +108,14 @@ public class DownloadProxy {
      */
     public DownloadConfigBean getConfigBean() {
         return downloadConfigBean;
+    }
+
+    public void remove(long id) {
+        DownloadManager.getInstance().remove(id);
+    }
+
+    public void release() {
+        DownloadManager.getInstance().release();
+        DownloadStatusManager.getInstance().release();
     }
 }

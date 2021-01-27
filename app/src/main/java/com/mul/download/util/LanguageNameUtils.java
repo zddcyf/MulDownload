@@ -38,6 +38,8 @@ public class LanguageNameUtils {
          */
         languageNameUtils.put(FileConfig.DE, "德语");
         languageNameUtils.put(FileConfig.AR, "阿拉伯语");
+        languageNameUtils.put(FileConfig.ZH, "中文");
+        languageNameUtils.put(FileConfig.JP, "日语");
     }
 
     public static String getLanguageName(String key) {

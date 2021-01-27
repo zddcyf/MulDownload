@@ -19,7 +19,7 @@ public class DownloadConfigBean {
     private boolean isReset = false; // 是否需要重新下载。不可以重新下载则会提示下载信息
     private boolean isVisibleInDownloadsUi = false; // 显示下载界面
     private boolean isNotificationVisibility = false; // 是否显示后台下载
-    private String submit = "正在下载中"; // 不可重新下载的提示信息
+    private String submit = "不可重复下载"; // 不可重新下载的提示信息
 
     public Context getContext() {
         return mContext;

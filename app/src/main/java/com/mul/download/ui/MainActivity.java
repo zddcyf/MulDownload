@@ -1,8 +1,6 @@
 package com.mul.download.ui;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +20,7 @@ import com.mul.download.adapter.LanguageDownloadAdapter;
 import com.mul.download.bean.DownloadBean;
 import com.mul.download.bean.DownloadConfigBean;
 import com.mul.download.bean.LanguageBean;
-import com.mul.download.click.OnProgressListener;
+import com.mul.download.listener.OnProgressListener;
 import com.mul.download.config.EventConfig;
 import com.mul.download.event.EventBusMessage;
 import com.mul.download.proxy.DownloadProxy;
@@ -102,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 表示事件处理函数的线程在主线程(UI)线程，因此在这里不能进行耗时操作。
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -119,18 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        DownloadProxy.obtain().registerDownload();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        DownloadProxy.obtain().unRegisterDownload();
     }
 
     @Override
@@ -184,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
     protected void permissionSuccess(int requestCode) {
         DownloadProxy.obtain().download("https://cdn-dl.yinxiang.com/YXWin6/public/Evernote_6.21.10.2263.exe"
                 , FileAccessor.TRANSLATE_MICROSOFT_DOWNLOAD_PATH
-                , languageBean.getFileName())
-//                , languageBean.getPosition())
-                .setOnProgressListener(new OnProgressListener() {
+                , languageBean.getFileName()
+                , languageBean.getPosition()
+                , new OnProgressListener() {
                     @Override
                     public void onProgress(DownloadBean downloadBean) {
                         Log.i(TAG, "当前id为" + downloadBean.getDownloadId()
@@ -208,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+//                , languageBean.getPosition())
+
     }
 
     protected void permissionFail(int mRequestCode) {
