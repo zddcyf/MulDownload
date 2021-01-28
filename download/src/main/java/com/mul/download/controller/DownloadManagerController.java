@@ -47,6 +47,26 @@ public class DownloadManagerController extends BaseDownloadController {
      * @param position     第几个在下载
      */
     public void download(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+        if (TextUtils.isEmpty(filePath)) {
+            Log.d(TAG, "please inti filepath");
+            return;
+        }
+
+        DownloadBean mDownloadBean = DownloadBeanManager.getInstance().get(fileName);
+        if (null != mDownloadBean) {
+            // 同一个文件是否可以重复下载
+            if (DownloadProxy.obtain().getConfigBean().isReset()) {
+                com.mul.download.manager.DownloadManager.getInstance().getManager().remove(mDownloadBean.getDownloadId());
+                DownloadBeanManager.getInstance().remove(fileName);
+            } else {
+                if (!TextUtils.isEmpty(DownloadProxy.obtain().getConfigBean().getSubmit())) {
+                    Toast.makeText(DownloadProxy.obtain().getConfigBean().getContext()
+                            , DownloadProxy.obtain().getConfigBean().getSubmit(), Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+
         DownloadStatusManager.getInstance().createDownloadStatusService();
         mExecutorService.execute(new DownloadRunnable(downloadPath, filePath, fileName, position, onProgressListener));
     }
@@ -68,26 +88,6 @@ public class DownloadManagerController extends BaseDownloadController {
 
         @Override
         public void run() {
-            if (TextUtils.isEmpty(filePath)) {
-                Log.d(TAG, "pleas inti filepath");
-                return;
-            }
-
-            DownloadBean mDownloadBean = DownloadBeanManager.getInstance().get(fileName);
-            if (null != mDownloadBean) {
-                // 同一个文件是否可以重复下载
-                if (DownloadProxy.obtain().getConfigBean().isReset()) {
-                    com.mul.download.manager.DownloadManager.getInstance().getManager().remove(mDownloadBean.getDownloadId());
-                    DownloadBeanManager.getInstance().remove(fileName);
-                } else {
-                    if (!TextUtils.isEmpty(DownloadProxy.obtain().getConfigBean().getSubmit())) {
-                        Toast.makeText(DownloadProxy.obtain().getConfigBean().getContext()
-                                , DownloadProxy.obtain().getConfigBean().getSubmit(), Toast.LENGTH_SHORT).show();
-                    }
-                    return;
-                }
-            }
-
             Log.i(TAG, downloadPath);
             //创建下载请求
             DownloadManager.Request down = new DownloadManager.Request(Uri.parse(downloadPath));

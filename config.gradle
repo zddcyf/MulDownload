@@ -3,8 +3,8 @@ def compileSdkVersion = 29
 def buildToolsVersion = "29.0.2"
 def minSdkVersion = 21
 def targetSdkVersion = 21
-def versionCode = 4
-def versionName = "v1.1.0"
+def versionCode = 5
+def versionName = "v1.1.1"
 
 // dependencies-app
 def appcompat = "1.0.2"
