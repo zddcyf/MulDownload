@@ -136,6 +136,8 @@ public class DownloadStatusManager {
     }
 
     public void release() {
-        mExecutorService.shutdown();
+        if (null != mExecutorService) {
+            mExecutorService.shutdown();
+        }
     }
 }
