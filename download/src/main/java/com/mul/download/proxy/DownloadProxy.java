@@ -40,15 +40,6 @@ public class DownloadProxy {
         private static final DownloadProxy DOWNLOAD_PROXY = new DownloadProxy();
     }
 
-    public DownloadProxy setData(Object mData) {
-        this.mData = mData;
-        return this;
-    }
-
-    public Object getData() {
-        return mData;
-    }
-
     /**
      * 初始化下载器
      *
@@ -76,11 +67,7 @@ public class DownloadProxy {
      * @param fileName     文件名称
      */
     public DownloadProxy download(String downloadPath, String filePath, String fileName, OnProgressListener onProgressListener) {
-        if (null == downloadController) {
-            Log.d(TAG, "please call the init()");
-            return this;
-        }
-        downloadController.download(downloadPath, filePath, fileName, 0, onProgressListener);
+        download(null, downloadPath, filePath, fileName, 0, onProgressListener);
         return this;
     }
 
@@ -93,11 +80,42 @@ public class DownloadProxy {
      * @param position     第几个在下载
      */
     public DownloadProxy download(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+        download(null, downloadPath, filePath, fileName, position, onProgressListener);
+        return this;
+    }
+
+    /**
+     * 开启下载
+     *
+     * @param mData        数据源
+     * @param downloadPath 下载路径
+     * @param filePath     文件存放路径
+     * @param fileName     文件名称
+     */
+    public DownloadProxy download(Object mData, String downloadPath, String filePath, String fileName, OnProgressListener onProgressListener) {
         if (null == downloadController) {
             Log.d(TAG, "please call the init()");
             return this;
         }
-        downloadController.download(downloadPath, filePath, fileName, position, onProgressListener);
+        downloadController.download(mData, downloadPath, filePath, fileName, 0, onProgressListener);
+        return this;
+    }
+
+    /**
+     * 开启下载
+     *
+     * @param mData        数据源
+     * @param downloadPath 下载路径
+     * @param filePath     文件存放路径
+     * @param fileName     文件名称
+     * @param position     第几个在下载
+     */
+    public DownloadProxy download(Object mData, String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+        if (null == downloadController) {
+            Log.d(TAG, "please call the init()");
+            return this;
+        }
+        downloadController.download(mData, downloadPath, filePath, fileName, position, onProgressListener);
         return this;
     }
 

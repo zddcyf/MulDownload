@@ -23,10 +23,11 @@ public abstract class BaseDownloadController {
     /**
      * 开启下载
      *
+     * @param mData        数据源
      * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      * @param position     第几个在下载
      */
-    public abstract void download(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener);
+    public abstract void download(Object mData, String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener);
 }

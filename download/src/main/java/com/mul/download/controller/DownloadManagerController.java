@@ -41,12 +41,13 @@ public class DownloadManagerController extends BaseDownloadController {
     /**
      * 开启下载(存在列表下载时)
      *
+     * @param mData 数据源
      * @param downloadPath 下载路径
      * @param filePath     文件存放路径
      * @param fileName     文件名称
      * @param position     第几个在下载
      */
-    public void download(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+    public void download(Object mData, String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
         if (TextUtils.isEmpty(filePath)) {
             Log.d(TAG, "please inti filepath");
             return;
@@ -68,17 +69,19 @@ public class DownloadManagerController extends BaseDownloadController {
         }
 
         DownloadStatusManager.getInstance().createDownloadStatusService();
-        mExecutorService.execute(new DownloadRunnable(downloadPath, filePath, fileName, position, onProgressListener));
+        mExecutorService.execute(new DownloadRunnable(mData, downloadPath, filePath, fileName, position, onProgressListener));
     }
 
     private class DownloadRunnable implements Runnable {
+        private Object mData;
         private String downloadPath;
         private String filePath;
         private String fileName;
         private int position;
         private OnProgressListener onProgressListener;
 
-        public DownloadRunnable(String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+        public DownloadRunnable(Object mData, String downloadPath, String filePath, String fileName, int position, OnProgressListener onProgressListener) {
+            this.mData = mData;
             this.downloadPath = downloadPath;
             this.filePath = filePath;
             this.fileName = fileName;
@@ -101,7 +104,7 @@ public class DownloadManagerController extends BaseDownloadController {
             //设置下载后文件存放的位置
             down.setDestinationInExternalPublicDir(filePath, fileName);
             //将下载请求放入队列
-            DownloadBeanManager.getInstance().save(new DownloadBean(onProgressListener, fileName, com.mul.download.manager.DownloadManager.getInstance().getManager().enqueue(down), position, DownloadProxy.obtain().getData()));
+            DownloadBeanManager.getInstance().save(new DownloadBean(onProgressListener, fileName, com.mul.download.manager.DownloadManager.getInstance().getManager().enqueue(down), position, mData));
         }
     }
 }
